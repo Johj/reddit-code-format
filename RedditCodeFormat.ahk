@@ -18,7 +18,7 @@ OpenPrompt:
 	}
 	else {
 		FileRead, FILE_I, %file_path%
-		MsgBox, % 64 + 262144, Options, Press 1 for spaces.`nOK to close script.
+		MsgBox, % 64 + 262144, Options, Press 1 for spaces.`nPress 2 for tabs.`nOK to close script.
 	}
 	ExitApp
 return
@@ -41,6 +41,16 @@ ReplaceTabs:
 	file := RegExReplace(temp, "`n$", "")
 return
 
+ReplaceSpaces:
+	temp := ""
+	file := RegExReplace(FILE_I, SPACES, TAB)
+	Loop, Parse, file, `n, `r
+	{
+		temp .= RegExReplace(A_LoopField, "^" . TAB, "") . "`n"
+	}
+	file := RegExReplace(temp, "`n$", "")
+return
+
 ; Hotkeys
 #IfWinExist, Options
 1::
@@ -48,5 +58,14 @@ return
 	Gosub, WriteFile
 	Sleep, 500
 	Run, %FILE_O%
+	ExitApp
+return
+
+2::
+	Gosub, ReplaceSpaces
+	Gosub, WriteFile
+	Sleep, 500
+	Run, %FILE_O%
+	ExitApp
 return
 #IfWinExist
