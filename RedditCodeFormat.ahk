@@ -12,13 +12,13 @@ return
 
 ; Labels
 OpenPrompt:
-	FileSelectFile, file_i, 3,, RedditCodeFormat - Select a file to format, AutoHotkey (*.ahk)
+	FileSelectFile, file_path, 3,, RedditCodeFormat - Select a file to format, AutoHotkey (*.ahk)
 	if ErrorLevel {
 		MsgBox, % 48 + 262144, RedditCodeFormat, No file was selected! Closing script..., 3
 	}
 	else {
-		FileRead, file, %file_i%
-		MsgBox, % 64 + 262144, Options, Press 1 for spaces.`nPress 2 for tabs.`nOK to close script.
+		FileRead, FILE_I, %file_path%
+		MsgBox, % 64 + 262144, Options, Press 1 for spaces.`nOK to close script.
 	}
 	ExitApp
 return
@@ -32,11 +32,13 @@ WriteFile:
 return
 
 ReplaceTabs:
-	file := RegExReplace(file, TAB, SPACES)
-return
-
-ReplaceSpaces:
-	file := RegExReplace(file, SPACES, TAB)
+	temp := ""
+	file := RegExReplace(FILE_I, TAB, SPACES)
+	Loop, Parse, file, `n, `r
+	{
+		temp .= SPACES . A_LoopField . "`n"
+	}
+	file := RegExReplace(temp, "`n$", "")
 return
 
 ; Hotkeys
@@ -44,10 +46,7 @@ return
 1::
 	Gosub, ReplaceTabs
 	Gosub, WriteFile
-return
-
-2::
-	Gosub, ReplaceSpaces
-	Gosub, WriteFile
+	Sleep, 500
+	Run, %FILE_O%
 return
 #IfWinExist
