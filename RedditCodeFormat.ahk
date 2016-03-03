@@ -18,7 +18,7 @@ OpenPrompt:
 	}
 	else {
 		FileRead, FILE_I, %file_path%
-		MsgBox, % 64 + 262144, Options, Press 1 for spaces.`nPress 2 for tabs.`nOK to close script.
+		MsgBox, % 64 + 262144, Options, Press 1 for file -> Reddit.`nPress 2 for Reddit -> file.`nOK to close script.
 	}
 	ExitApp
 return
